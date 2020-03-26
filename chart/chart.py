@@ -1,8 +1,9 @@
 import json
 import random
 
-SOURCE = "data2.csv"
-
+SOURCE = "data1.csv"
+MAX_HEIGHT = 400
+MAX_WIDTH = 600
 COLORS = [
     "#ced4da",
     "#868e96",
@@ -24,9 +25,6 @@ data = []
 
 title_x = "X Axis"
 title_y = "Y Axis"
-
-MAX_HEIGHT = 400
-MAX_WIDTH = 600
 
 excalidraw = {
     "version": 1,
