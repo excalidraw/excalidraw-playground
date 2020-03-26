@@ -2,8 +2,8 @@ import json
 import random
 
 SOURCE = "data1.csv"
-MAX_HEIGHT = 400
 MAX_WIDTH = 600
+MAX_HEIGHT = 400
 COLORS = [
     "#ced4da",
     "#868e96",

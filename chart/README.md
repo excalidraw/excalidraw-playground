@@ -3,7 +3,8 @@
 ## How to use it
 
 - Create a `.csv` file or update the [`data1.csv`](data1.csv)
-- Update the `SOURCE` in the [`chart.py`](chart.py)
+- Update `SOURCE` in the [`chart.py`](chart.py)
+- Update `MAX_WIDTH` and `MAX_HEIGHT`
 - Execute `python3 chart.py`
 - Drag and drop `chart.excalidraw` into [excalidraw.com](https://excalidraw.com)
 
