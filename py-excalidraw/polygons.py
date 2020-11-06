@@ -31,5 +31,5 @@ for index, ngon in enumerate(ngons):
     )
 
 
-scene.save_as("ngons")
-scene.save_as_lib("ngons")
+scene.save_as("polygons")
+scene.save_as_lib("polygons")
