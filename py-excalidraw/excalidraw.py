@@ -55,18 +55,38 @@ STROKE = [
     "#d9480f",
 ]
 
+# source: https://stackoverflow.com/a/46336730/8418
+def bounding_box(points):
+    x_coordinates, y_coordinates = zip(*points)
+    return [
+        (min(x_coordinates), min(y_coordinates)),
+        (max(x_coordinates), max(y_coordinates)),
+    ]
+
+
+def width_height(box):
+    return box[1][0] - box[0][0], box[1][1] - box[0][1]
+
 
 class Excalidraw:
     data = {
-        "version": 1,
+        "version": 2,
         "type": "excalidraw",
         "source": "py-excalidraw",
         "elements": [],
         "appState": {"viewBackgroundColor": CANVAS[0]},
     }
 
+    lib = {"type": "excalidrawlib", "version": 1, "library": []}
+
     def __new_element(
-        self, element_type, angle=0, roughness=1, strokeWidth=1, fillStyle="hachure"
+        self,
+        element_type,
+        angle=0,
+        roughness=1,
+        strokeWidth=1,
+        fillStyle="hachure",
+        strokeSharpness="round",
     ):
         return {
             "type": element_type,
@@ -76,6 +96,7 @@ class Excalidraw:
             "fillStyle": fillStyle,
             "strokeWidth": strokeWidth,
             "roughness": roughness,
+            "strokeSharpness": strokeSharpness,
             "angle": angle,
         }
 
@@ -98,10 +119,36 @@ class Excalidraw:
         rectangle["backgroundColor"] = backgroundColor
         self.data["elements"].append(rectangle)
 
+    def add_line(
+        self,
+        x,
+        y,
+        points,
+        strokeColor=STROKE[0],
+        backgroundColor=BACKGROUND[0],
+        **kargs,
+    ):
+        line = self.__new_element("line", **kargs)
+        line["x"] = x
+        line["y"] = y
+        line["points"] = points
+        line["strokeColor"] = strokeColor
+        line["backgroundColor"] = backgroundColor
+        line["width"], line["height"] = width_height(bounding_box(points))
+        self.data["elements"].append(line)
+
     def save_as(self, filename):
         filename = filename if filename.find(".") > -1 else f"{filename}.excalidraw"
         with open(filename, "w") as excalidraw_file:
             json.dump(self.data, excalidraw_file, indent=2)
+        print(f"File saved {filename}")
+
+    def save_as_lib(self, filename):
+        filename = filename if filename.find(".") > -1 else f"{filename}.excalidrawlib"
+        for element in self.data["elements"]:
+            self.lib["library"].append([element])
+        with open(filename, "w") as excalidraw_lib_file:
+            json.dump(self.lib, excalidraw_lib_file, indent=2)
         print(f"File saved {filename}")
 
     def get_data(self):
