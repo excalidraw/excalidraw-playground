@@ -1,4 +1,4 @@
-# http://excalidraw.com/?addLibrary=https://gist.githubusercontent.com/lipis/c148134151ac57b7f5df62cba69a4ee4/raw/b4b9bfa27c7399ebb6e4390fdfae2162ff768b39/ngons.excalidrawlib
+# https://excalidraw.com/?addLibrary=https://gist.githubusercontent.com/lipis/c148134151ac57b7f5df62cba69a4ee4/raw/b4b9bfa27c7399ebb6e4390fdfae2162ff768b39/ngons.excalidrawlib
 # https://excalidraw.com/#json=5636464553492480,cBE2J8KaCrIGGucL7UpGbg
 
 import excalidraw
