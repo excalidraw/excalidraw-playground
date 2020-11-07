@@ -119,8 +119,8 @@ class Excalidraw:
         element = self.__new_element("rectangle", **kargs)
         element["x"] = x
         element["y"] = y
-        element["width"] = round(width, PRECISION)
-        element["height"] = round(height, PRECISION)
+        element["width"] = width
+        element["height"] = height
         element["strokeColor"] = strokeColor
         element["backgroundColor"] = backgroundColor
         self.add_element(element)
@@ -183,15 +183,18 @@ class Excalidraw:
         self.data["elements"].append(self.normalize_element(element))
 
     def normalize_element(self, element):
-      if 'width' in element:
-          element["width"] = round(element["width"], PRECISION)
-      if 'height' in element:
-          element["height"] = round(element["height"], PRECISION)
-      if 'x' in element:
-          element["x"] = round(element["x"], PRECISION)
-      if 'y' in element:
-          element["y"] = round(element["y"], PRECISION)
-      if 'points' in element:
-          element["points"] = [[round(point[0], PRECISION), round(point[1], PRECISION)] for point in element["points"]]
+        if "width" in element:
+            element["width"] = round(element["width"], PRECISION)
+        if "height" in element:
+            element["height"] = round(element["height"], PRECISION)
+        if "x" in element:
+            element["x"] = round(element["x"], PRECISION)
+        if "y" in element:
+            element["y"] = round(element["y"], PRECISION)
+        if "points" in element:
+            element["points"] = [
+                [round(point[0], PRECISION), round(point[1], PRECISION)]
+                for point in element["points"]
+            ]
 
-      return element
+        return element
