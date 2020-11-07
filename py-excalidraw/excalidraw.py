@@ -1,6 +1,8 @@
 import json
 import random
 
+RND = 4
+
 CANVAS = [
     "#ffffff",
     "#f8f9fa",
@@ -55,6 +57,7 @@ STROKE = [
     "#d9480f",
 ]
 
+
 # source: https://stackoverflow.com/a/46336730/8418
 def bounding_box(points):
     x_coordinates, y_coordinates = zip(*points)
@@ -65,7 +68,10 @@ def bounding_box(points):
 
 
 def width_height(box):
-    return box[1][0] - box[0][0], box[1][1] - box[0][1]
+    return (
+        round(box[1][0] - box[0][0], RND),
+        round(box[1][1] - box[0][1], RND),
+    )
 
 
 class Excalidraw:
@@ -91,7 +97,7 @@ class Excalidraw:
         return {
             "type": element_type,
             "opacity": 100,
-            "seed": random.randint(1000000, 100000000),
+            "seed": random.randint(1_000_000, 100_000_000),
             "strokeColor": STROKE[0],
             "fillStyle": fillStyle,
             "strokeWidth": strokeWidth,
@@ -110,14 +116,33 @@ class Excalidraw:
         backgroundColor=BACKGROUND[0],
         **kargs,
     ):
-        rectangle = self.__new_element("rectangle", **kargs)
-        rectangle["x"] = x
-        rectangle["y"] = y
-        rectangle["width"] = width
-        rectangle["height"] = height
-        rectangle["strokeColor"] = strokeColor
-        rectangle["backgroundColor"] = backgroundColor
-        self.data["elements"].append(rectangle)
+        element = self.__new_element("rectangle", **kargs)
+        element["x"] = x
+        element["y"] = y
+        element["width"] = width
+        element["height"] = height
+        element["strokeColor"] = strokeColor
+        element["backgroundColor"] = backgroundColor
+        self.add_element(element)
+
+    def add_ellipse(
+        self,
+        x,
+        y,
+        width,
+        height,
+        strokeColor=STROKE[0],
+        backgroundColor=BACKGROUND[0],
+        **kargs,
+    ):
+        element = self.__new_element("ellipse", **kargs)
+        element["x"] = x
+        element["y"] = y
+        element["width"] = width
+        element["height"] = height
+        element["strokeColor"] = strokeColor
+        element["backgroundColor"] = backgroundColor
+        self.add_element(element)
 
     def add_line(
         self,
@@ -128,19 +153,19 @@ class Excalidraw:
         backgroundColor=BACKGROUND[0],
         **kargs,
     ):
-        line = self.__new_element("line", **kargs)
-        line["x"] = x
-        line["y"] = y
-        line["points"] = points
-        line["strokeColor"] = strokeColor
-        line["backgroundColor"] = backgroundColor
-        line["width"], line["height"] = width_height(bounding_box(points))
-        self.data["elements"].append(line)
+        element = self.__new_element("line", **kargs)
+        element["x"] = x
+        element["y"] = y
+        element["points"] = points
+        element["strokeColor"] = strokeColor
+        element["backgroundColor"] = backgroundColor
+        element["width"], element["height"] = width_height(bounding_box(points))
+        self.add_element(element)
 
     def save_as(self, filename):
         filename = filename if filename.find(".") > -1 else f"{filename}.excalidraw"
         with open(filename, "w") as excalidraw_file:
-            json.dump(self.data, excalidraw_file, indent=2)
+            json.dump(self.data, excalidraw_file, indent=2, sort_keys=True)
         print(f"File saved {filename}")
 
     def save_as_lib(self, filename):
@@ -148,8 +173,27 @@ class Excalidraw:
         for element in self.data["elements"]:
             self.lib["library"].append([element])
         with open(filename, "w") as excalidraw_lib_file:
-            json.dump(self.lib, excalidraw_lib_file, indent=2)
+            json.dump(self.lib, excalidraw_lib_file, indent=2, sort_keys=True)
         print(f"File saved {filename}")
 
     def get_data(self):
         return self.data
+
+    def add_element(self, element):
+        self.data["elements"].append(self.normalize_element(element))
+
+    def normalize_element(self, element):
+        if "width" in element:
+            element["width"] = round(element["width"], RND)
+        if "height" in element:
+            element["height"] = round(element["height"], RND)
+        if "x" in element:
+            element["x"] = round(element["x"], RND)
+        if "y" in element:
+            element["y"] = round(element["y"], RND)
+        if "points" in element:
+            element["points"] = [
+                [round(p[0], RND), round(p[1], RND)] for p in element["points"]
+            ]
+
+        return element

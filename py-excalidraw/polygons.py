@@ -8,9 +8,9 @@ import math
 scene = excalidraw.Excalidraw()
 
 radius = 80
-initial_angle = math.pi / 2 + math.pi
+initial_angle = 3 * math.pi / 2
 
-polygons = [3, 4, 5, 6, 7, 8, 10, 12]
+polygons = [3, 5, 6, 8, 10, 12]
 
 for index, polygon in enumerate(polygons):
     points = []
@@ -23,14 +23,13 @@ for index, polygon in enumerate(polygons):
             ]
         )
     scene.add_line(
-        (index % 4) * (radius * 2 + radius / 2),
-        (index // 4) * (radius * 2 + radius / 2),
+        (index % 3) * (radius * 2 + radius / 2),
+        (index // 3) * (radius * 2 + radius / 2),
         points,
         strokeSharpness="sharp",
         fillStyle="solid",
         backgroundColor=excalidraw.BACKGROUND[index + 3],
     )
-
 
 scene.save_as("polygons")
 scene.save_as_lib("polygons")
