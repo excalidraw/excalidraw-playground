@@ -1,7 +1,7 @@
 import json
 import random
 
-PRECISION = 4
+RND = 4
 
 CANVAS = [
     "#ffffff",
@@ -69,8 +69,8 @@ def bounding_box(points):
 
 def width_height(box):
     return (
-        round(box[1][0] - box[0][0], PRECISION),
-        round(box[1][1] - box[0][1], PRECISION),
+        round(box[1][0] - box[0][0], RND),
+        round(box[1][1] - box[0][1], RND),
     )
 
 
@@ -184,17 +184,16 @@ class Excalidraw:
 
     def normalize_element(self, element):
         if "width" in element:
-            element["width"] = round(element["width"], PRECISION)
+            element["width"] = round(element["width"], RND)
         if "height" in element:
-            element["height"] = round(element["height"], PRECISION)
+            element["height"] = round(element["height"], RND)
         if "x" in element:
-            element["x"] = round(element["x"], PRECISION)
+            element["x"] = round(element["x"], RND)
         if "y" in element:
-            element["y"] = round(element["y"], PRECISION)
+            element["y"] = round(element["y"], RND)
         if "points" in element:
             element["points"] = [
-                [round(point[0], PRECISION), round(point[1], PRECISION)]
-                for point in element["points"]
+                [round(p[0], RND), round(p[1], RND)] for p in element["points"]
             ]
 
         return element
