@@ -99,7 +99,6 @@ class Excalidraw:
         return {
             "angle": angle,
             "fillStyle": fillStyle,
-            "groupIds": [],  # Libs don't work without it
             "opacity": 100,
             "roughness": roughness,
             "seed": random.randint(1_000_000, 100_000_000),
