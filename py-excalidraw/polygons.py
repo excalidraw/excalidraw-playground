@@ -1,6 +1,6 @@
 # https://gist.github.com/lipis/c148134151ac57b7f5df62cba69a4ee4
-# https://excalidraw.com/?addLibrary=https://gist.githubusercontent.com/lipis/c148134151ac57b7f5df62cba69a4ee4/raw/b4b9bfa27c7399ebb6e4390fdfae2162ff768b39/polygons.excalidrawlib
-# https://excalidraw.com/#json=5636464553492480,cBE2J8KaCrIGGucL7UpGbg
+# https://excalidraw.com/?addLibrary=https://gist.githubusercontent.com/lipis/c148134151ac57b7f5df62cba69a4ee4/raw/033c8a8353db224beff34f3024e3cbe21f182c30/polygons.excalidrawlib
+# https://excalidraw.com/#json=5666429063921664,h0yDjfkDndzI10H-OnNEcA
 
 import excalidraw
 import math
