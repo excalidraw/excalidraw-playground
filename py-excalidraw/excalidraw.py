@@ -94,7 +94,7 @@ class Excalidraw:
         roughness=1,
         strokeWidth=1,
         fillStyle="hachure",
-        strokeSharpness="round",
+        strokeSharpness="sharp",
     ):
         return {
             "angle": angle,
