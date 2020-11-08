@@ -1,5 +1,7 @@
 import json
 import random
+import hashlib
+import copy
 
 RND = 4
 
@@ -95,15 +97,16 @@ class Excalidraw:
         strokeSharpness="round",
     ):
         return {
-            "type": element_type,
+            "angle": angle,
+            "fillStyle": fillStyle,
+            "groupIds": [],  # Libs don't work without it
             "opacity": 100,
+            "roughness": roughness,
             "seed": random.randint(1_000_000, 100_000_000),
             "strokeColor": STROKE[0],
-            "fillStyle": fillStyle,
-            "strokeWidth": strokeWidth,
-            "roughness": roughness,
             "strokeSharpness": strokeSharpness,
-            "angle": angle,
+            "strokeWidth": strokeWidth,
+            "type": element_type,
         }
 
     def add_rectangle(
@@ -176,9 +179,6 @@ class Excalidraw:
             json.dump(self.lib, excalidraw_lib_file, indent=2, sort_keys=True)
         print(f"File saved {filename}")
 
-    def get_data(self):
-        return self.data
-
     def add_element(self, element):
         self.data["elements"].append(self.normalize_element(element))
 
@@ -195,5 +195,12 @@ class Excalidraw:
             element["points"] = [
                 [round(p[0], RND), round(p[1], RND)] for p in element["points"]
             ]
+
+        # generate the ID based on the elements data, withouth the seed
+        data = copy.copy(element)
+        del data["seed"]
+        element["id"] = hashlib.md5(
+            json.dumps(data, sort_keys=True).encode()
+        ).hexdigest()
 
         return element
