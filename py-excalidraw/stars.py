@@ -20,7 +20,6 @@ for index, star in enumerate(stars):
         (index % 4) * (outer_radius * 2 + outer_radius / 2),
         (index // 4) * (outer_radius * 2 + outer_radius / 2),
         points,
-        strokeSharpness="sharp",
         fillStyle="solid",
         backgroundColor=excalidraw.BACKGROUND[index + 3],
     )

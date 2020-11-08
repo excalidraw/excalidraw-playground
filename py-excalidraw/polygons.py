@@ -26,7 +26,6 @@ for index, polygon in enumerate(polygons):
         (index % 3) * (radius * 2 + radius / 2),
         (index // 3) * (radius * 2 + radius / 2),
         points,
-        strokeSharpness="sharp",
         fillStyle="solid",
         backgroundColor=excalidraw.BACKGROUND[index + 3],
     )
