@@ -1,4 +1,4 @@
-# py-excalidraw
+# excalidraw.py
 
 > Python library to generate `.excalidraw` files.
 
