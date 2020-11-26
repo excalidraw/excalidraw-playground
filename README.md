@@ -1,8 +1,8 @@
 # Excalidraw Playground
 
 ### Shapes
-- [Polygons](https://excalidraw.com/#json=5149432844648448,DuvLrwY0lcrsrsCBQztMzw) - [source](py-py-excalidraw/polygons.py)
-- [Stars](https://excalidraw.com/#json=5174550887137280,GAm2jdzRyXb8D6LdOQKw2A) - [source](py-excalidraw/stars.py)
+- [Polygons](https://excalidraw.com/#json=5149432844648448,DuvLrwY0lcrsrsCBQztMzw) - [source](excalidraw/polygons.py)
+- [Stars](https://excalidraw.com/#json=5174550887137280,GAm2jdzRyXb8D6LdOQKw2A) - [source](excalidraw/stars.py)
 
 
 ### Chart
