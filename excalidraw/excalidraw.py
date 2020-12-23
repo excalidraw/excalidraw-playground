@@ -60,6 +60,10 @@ STROKE = [
 ]
 
 
+def get_random_background():
+    return random.choice(BACKGROUND)
+
+
 # source: https://stackoverflow.com/a/46336730/8418
 def bounding_box(points):
     x_coordinates, y_coordinates = zip(*points)
@@ -77,15 +81,19 @@ def width_height(box):
 
 
 class Excalidraw:
-    data = {
-        "version": 2,
-        "type": "excalidraw",
-        "source": "py-excalidraw",
-        "elements": [],
-        "appState": {"viewBackgroundColor": CANVAS[0]},
-    }
+    def __init__(self):
+        self.data = {
+            "version": 2,
+            "type": "excalidraw",
+            "source": "py-excalidraw",
+            "elements": [],
+            "appState": {"viewBackgroundColor": CANVAS[0]},
+        }
 
-    lib = {"type": "excalidrawlib", "version": 1, "library": []}
+        self.lib = {"type": "excalidrawlib", "version": 1, "library": []}
+
+        self.TEXT_HEIGHT = 25
+        self.TITLE_WIDTH = 100
 
     def __new_element(
         self,
@@ -95,8 +103,9 @@ class Excalidraw:
         strokeWidth=1,
         fillStyle="hachure",
         strokeSharpness="sharp",
+        **kargs,
     ):
-        return {
+        element = {
             "angle": angle,
             "fillStyle": fillStyle,
             "opacity": 100,
@@ -107,6 +116,11 @@ class Excalidraw:
             "strokeWidth": strokeWidth,
             "type": element_type,
         }
+
+        for arg in kargs:
+            element[arg] = kargs[arg]
+
+        return element
 
     def add_rectangle(
         self,
@@ -163,6 +177,125 @@ class Excalidraw:
         element["backgroundColor"] = backgroundColor
         element["width"], element["height"] = width_height(bounding_box(points))
         self.add_element(element)
+
+    def add_arrow(
+        self,
+        x,
+        y,
+        points,
+        strokeColor=STROKE[0],
+        backgroundColor=BACKGROUND[0],
+        **kargs,
+    ):
+        element = self.__new_element("arrow", **kargs)
+        element["x"] = x
+        element["y"] = y
+        element["points"] = points
+        element["strokeColor"] = strokeColor
+        element["backgroundColor"] = backgroundColor
+        element["width"], element["height"] = width_height(bounding_box(points))
+        self.add_element(element)
+
+    def add_text(self, x, y, width, height, text, **kargs):
+        element = self.__new_element("text", **kargs)
+        element["x"] = x
+        element["y"] = y
+        element["width"] = width
+        element["height"] = height
+        element["text"] = text
+        element["fontFamily"] = 1
+        element["fontSize"] = 20
+        element["verticalAlign"] = "middle"
+        element["baseline"] = 18
+        self.add_element(element)
+
+    def add_chart_axis(self, csv, bar_width, max_height):
+        self.load_data(csv)
+        self.gap = bar_width / 8
+        self.max_y = 0
+        max_x = len(self.chart_data)
+        width = max_x * bar_width
+
+        for key, value in self.chart_data:
+            self.max_y = max(self.max_y, value)
+
+        x = 0
+        for key, value in self.chart_data:
+            self.add_text(
+                x * bar_width + self.gap,
+                self.gap,
+                bar_width,
+                self.TEXT_HEIGHT,
+                key,
+                textAlign="center",
+            )
+            x += 1
+
+        self.add_arrow(0, 0, [[0, 0], [0, -max_height - bar_width]])
+        self.add_arrow(0, 0, [[0, 0], [width + bar_width, 0]])
+        self.add_line(
+            0,
+            -max_height - self.gap,
+            [[0, 0], [width + bar_width, 0]],
+            strokeStyle="dashed",
+        )
+
+        # Add title in the middle on top
+        self.add_text(
+            (width - self.TITLE_WIDTH) / 2,
+            -max_height - self.TEXT_HEIGHT * 3,
+            self.TITLE_WIDTH,
+            self.TEXT_HEIGHT,
+            self.title_y,
+            textAlign="center",
+        )
+
+        # Add the max value on the y-axis
+        self.add_text(
+            -self.TITLE_WIDTH - self.gap * 2,
+            -max_height - self.gap - self.TEXT_HEIGHT / 2,
+            self.TITLE_WIDTH,
+            self.TEXT_HEIGHT,
+            str(int(self.max_y)),
+            textAlign="right",
+        )
+
+        # Add 0 on the y-axis
+        self.add_text(
+            -self.TITLE_WIDTH - self.gap * 2,
+            -self.TEXT_HEIGHT / 2,
+            self.TITLE_WIDTH,
+            self.TEXT_HEIGHT,
+            str(0),
+            textAlign="right",
+        )
+
+    def add_chart(self, csv, bar_width, max_height):
+        self.add_chart_axis(csv, bar_width, max_height)
+        x = 0
+        color = get_random_background()
+
+        for key, value in self.chart_data:
+            self.add_rectangle(
+                x * bar_width + self.gap,
+                -self.gap,
+                bar_width - self.gap,
+                -value * (max_height / self.max_y),
+                backgroundColor=color,
+            )
+            x += 1
+
+    def load_data(self, csv):
+        self.chart_data = []
+        with open(csv, "r") as file:
+            header = False
+            for line in file.readlines():
+                if not header:
+                    self.title_x, self.title_y = line.replace("\n", "").split(",")
+                    header = True
+                else:
+                    key, value = line.split(",")
+                    self.chart_data.append([key, float(value)])
 
     def save_as(self, filename):
         filename = filename if filename.find(".") > -1 else f"{filename}.excalidraw"
