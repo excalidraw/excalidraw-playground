@@ -1,4 +1,3 @@
-# https://excalidraw.com/?addLibrary=https://gist.githubusercontent.com/lipis/a0de24a467a2869ed45635fa976afdcf/raw/ace7e402f7b0e48dc6738ddac6b5e6608b2aa7d4/stars.excalidawlib
 # https://excalidraw.com/#json=5394737318068224,XZC0jx3WBYiFI6mcGofmIQ
 
 import excalidraw
